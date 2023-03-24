@@ -5,13 +5,11 @@ import pandas as pd
 import tensorflow as tf
 
 
-class InceptionModule:
+class Inception:
     
     def __init__(self, length_TS, pretrained_model):
         
-        xtrain, ytrain, xtest, ytest = load_data(length_TS)
-        
-        self.length_TS = xtrain.shape[1]
+        self.length_TS = length_TS
         
         self.pretrained_model = keras.models.load_model('/home/huseyn/internship/code/inception_pretrained/' + 
                                                        pretrained_model + '/best_model.hdf5')
@@ -59,12 +57,25 @@ class InceptionModule:
     
     def transform(self, X, kernels):
         
-        xtrain, ytrain, xtest, ytest = load_data(X)
-        y_pred = kernels.predict(xtrain)
+        y_pred = kernels.predict(X)
         pvps = np.mean(y_pred > 0, axis=(0, 1)) 
         maxs = np.max(y_pred, axis=(0, 1)) 
         
+        # There should be X_array
+        # return X_array 
+
         return pvps, maxs
+
+
+
+#xtrain, ytrain, xtest, ytest = load_data('Coffee')
+#length_TS = int(xtrain.shape[1])
+
+#inc = Inception(length_TS, 'Coffee')
+
+#model = inc.get_kernels()
+
+#pvps, maxs = inc.transform(xtrain, model)
 
 
 

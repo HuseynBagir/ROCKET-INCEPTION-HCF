@@ -30,8 +30,11 @@ def get_args():
         '--transformation',
         help='which classifier to use',
         type=str,
-        choices=['ROCKET', 'HCF', 'ROCKET+HCF', 'HCF+ROCKET'],
-        default='ROCKET+HCF'
+        choices=['ROCKET', 'HCF', 'Inception', 'Inception+ROCKET', 'ROCKET+Inception', 
+                 'Inception+HCF', 'HCF+Inception', 'ROCKET+HCF', 'HCF+ROCKET', 
+                 'ROCKET+HCF+Inception', 'ROCKET+Inception+HCF', 'HCF+ROCKET+Inception',
+                 'HCF+Inception+ROCKET', 'Inception+ROCKET+HCF', 'Inception+HCF+ROCKET'],
+        default='ROCKET+HCF+Inception'
     )
 
     parser.add_argument(
@@ -45,7 +48,14 @@ def get_args():
         type=int,
         default=6
     )
-
+    '''
+    parser.add_argument(
+        '--inception-pm',
+        type=str,
+        default='Coffee'
+    )
+   ''' 
+    
     parser.add_argument(
         '--runs',
         help="number of runs to do",
@@ -87,6 +97,9 @@ if __name__ == '__main__':
         
         elif transformation_name == 'HCF':
             output_dir_transformation = output_dir_transformation + '-' + str(args.custom_filters)
+            
+        #elif transformation_name == 'Inception':
+        #    output_dir_transformation = output_dir_transformation + '-' + str(args.inception_pm)
         
         if i < len(transformations) - 1:
             output_dir_transformation = output_dir_transformation + '+'
@@ -119,7 +132,7 @@ if __name__ == '__main__':
         df = pd.DataFrame(columns=['accuracy'])
 
         _Transformation = Transformation(transformations=transformations, length_TS=length_TS,
-                                         n_filters_rocket=args.rocket_filters, n_filters_hcf=args.custom_filters)
+                                         n_filters_rocket=args.rocket_filters, n_filters_hcf=args.custom_filters)#, pretrained_model=args.inception_pm)
         
         transformed_xtrain, transformed_xtest = _Transformation.transform(xtrain=xtrain, xtest=xtest)
 
