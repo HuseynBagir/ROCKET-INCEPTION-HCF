@@ -1,20 +1,22 @@
 import keras
+import sys
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data
 import numpy as np
-import pandas as pd
 import tensorflow as tf
 
 
 class Inception:
     
-    def __init__(self, length_TS, pretrained_model):
+    def __init__(self, length_TS, pretrained_model, pooling):
         
         self.length_TS = length_TS
         
         self.pretrained_model = keras.models.load_model('/home/huseyn/internship/code/inception_pretrained/' + 
                                                        pretrained_model + '/best_model.hdf5')
+        
+        self.pooling = pooling
     
-
     def get_kernels(self):
     
         weights_40 = self.pretrained_model.layers[3].get_weights()
@@ -58,29 +60,29 @@ class Inception:
     def transform(self, X, kernels):
         
         y_pred = kernels.predict(X)
-        pvps = np.mean(y_pred > 0, axis=(0, 1)) 
-        maxs = np.max(y_pred, axis=(0, 1)) 
         
-        # There should be X_array
-        # return X_array 
+        if self.pooling == 'ppv+max':
+            pvps = np.mean(y_pred > 0, axis=1) 
+            maxs = np.max(y_pred, axis=1)
+            
+            X_array = np.concatenate([pvps,maxs], axis=1)
+        
+        elif self.pooling == 'GAP':
+            X_array = keras.layers.GlobalAveragePooling1D()(y_pred)
+            X_array = X_array.numpy()
+        
+        elif self.pooling == 'max':
+            pass
+        
+        return X_array
 
-        return pvps, maxs
+'''
+xtrain, ytrain, xtest, ytest = load_data('Coffee')
+length_TS = int(xtrain.shape[1])
 
+inc = Inception(length_TS, 'Coffee', 'GAP')
 
+model = inc.get_kernels()
 
-#xtrain, ytrain, xtest, ytest = load_data('Coffee')
-#length_TS = int(xtrain.shape[1])
-
-#inc = Inception(length_TS, 'Coffee')
-
-#model = inc.get_kernels()
-
-#pvps, maxs = inc.transform(xtrain, model)
-
-
-
-
-
-
-
-
+X = inc.transform(xtrain, model)
+'''

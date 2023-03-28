@@ -13,7 +13,9 @@ import tensorflow as tf
 from transformations.transformation import Transformation
 from classifiers.RIDGE import RIDGE
 
-from utils.utils import load_data, znormalisation, create_directory, encode_labels
+import sys
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+from utils import load_data, znormalisation, create_directory, encode_labels
 
 def get_args():
 
@@ -40,7 +42,7 @@ def get_args():
     parser.add_argument(
         '--rocket-filters',
         type=int,
-        default=10000
+        default=500
     )
 
     parser.add_argument(
@@ -48,14 +50,19 @@ def get_args():
         type=int,
         default=6
     )
-    '''
+    
     parser.add_argument(
         '--inception-pm',
         type=str,
         default='Coffee'
     )
-   ''' 
     
+    parser.add_argument(
+        '--pooling',
+        type=str,
+        default='ppv+max'
+    )
+   
     parser.add_argument(
         '--runs',
         help="number of runs to do",
@@ -98,8 +105,8 @@ if __name__ == '__main__':
         elif transformation_name == 'HCF':
             output_dir_transformation = output_dir_transformation + '-' + str(args.custom_filters)
             
-        #elif transformation_name == 'Inception':
-        #    output_dir_transformation = output_dir_transformation + '-' + str(args.inception_pm)
+        elif transformation_name == 'Inception':
+            output_dir_transformation = output_dir_transformation
         
         if i < len(transformations) - 1:
             output_dir_transformation = output_dir_transformation + '+'
@@ -132,7 +139,8 @@ if __name__ == '__main__':
         df = pd.DataFrame(columns=['accuracy'])
 
         _Transformation = Transformation(transformations=transformations, length_TS=length_TS,
-                                         n_filters_rocket=args.rocket_filters, n_filters_hcf=args.custom_filters)#, pretrained_model=args.inception_pm)
+                                         n_filters_rocket=args.rocket_filters, n_filters_hcf=args.custom_filters, 
+                                         pretrained_model=args.inception_pm, pooling=args.pooling)
         
         transformed_xtrain, transformed_xtest = _Transformation.transform(xtrain=xtrain, xtest=xtest)
 
