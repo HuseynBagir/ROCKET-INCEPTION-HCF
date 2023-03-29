@@ -43,9 +43,12 @@ class Inception:
                                     activation=None, use_bias=False)(max_pool)
         
         concat = keras.layers.Concatenate(axis=2)([conv1, conv2, conv3, conv4])
-        batch = keras.layers.BatchNormalization()(concat)
+        out = keras.layers.BatchNormalization()(concat)
         
-        model = tf.keras.models.Model(inputs=input_layer, outputs=batch)
+        #if self.pooling == 'GAP':
+         #   out = keras.layers.GlobalAveragePooling1D()(out)
+        
+        model = tf.keras.models.Model(inputs=input_layer, outputs=out)
         
         
         model.layers[2].set_weights(weights_40)
@@ -66,11 +69,11 @@ class Inception:
             maxs = np.max(y_pred, axis=1)
             
             X_array = np.concatenate([pvps,maxs], axis=1)
-        
+            
         elif self.pooling == 'GAP':
             X_array = keras.layers.GlobalAveragePooling1D()(y_pred)
             X_array = X_array.numpy()
-        
+            
         elif self.pooling == 'max':
             pass
         

@@ -42,7 +42,7 @@ def get_args():
     parser.add_argument(
         '--rocket-filters',
         type=int,
-        default=500
+        default=10000
     )
 
     parser.add_argument(
