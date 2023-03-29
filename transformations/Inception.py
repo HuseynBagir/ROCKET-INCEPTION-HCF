@@ -71,11 +71,15 @@ class Inception:
             X_array = np.concatenate([pvps,maxs], axis=1)
             
         elif self.pooling == 'GAP':
-            X_array = keras.layers.GlobalAveragePooling1D()(y_pred)
-            X_array = X_array.numpy()
+            GAP = keras.layers.GlobalAveragePooling1D()(y_pred)
+            X_array = GAP.numpy()
             
-        elif self.pooling == 'max':
-            pass
+        elif self.pooling == 'ppv+max+GAP':
+            pvps = np.mean(y_pred > 0, axis=1) 
+            maxs = np.max(y_pred, axis=1)
+            GAP = keras.layers.GlobalAveragePooling1D()(y_pred)
+            GAP = GAP.numpy()
+            X_array = np.concatenate([pvps,maxs,GAP], axis=1)
         
         return X_array
 
@@ -83,7 +87,7 @@ class Inception:
 xtrain, ytrain, xtest, ytest = load_data('Coffee')
 length_TS = int(xtrain.shape[1])
 
-inc = Inception(length_TS, 'Coffee', 'GAP')
+inc = Inception(length_TS, 'Coffee', 'ppv+max+GAP')
 
 model = inc.get_kernels()
 

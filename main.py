@@ -42,7 +42,7 @@ def get_args():
     parser.add_argument(
         '--rocket-filters',
         type=int,
-        default=10000
+        default=500
     )
 
     parser.add_argument(
@@ -60,7 +60,7 @@ def get_args():
     parser.add_argument(
         '--pooling',
         type=str,
-        default='ppv+max'
+        default='ppv+max+GAP'
     )
    
     parser.add_argument(
