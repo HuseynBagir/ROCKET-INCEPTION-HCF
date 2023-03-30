@@ -9,10 +9,10 @@ for file_name in "${file_names[@]}"; do
      python3 -u main.py --transformation ROCKET+HCF --rocket-filters 500 --custom-filters 6 --dataset $file_name
      python3 -u main.py --transformation ROCKET+HCF --rocket-filters 517 --custom-filters 0 --dataset $file_name
      python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 500 --custom-filters 0 --pooling ppv+max --dataset $file_name
-     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 500 --custom-filters 0 --pooling GAP --dataset $file_name
-     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 500 --custom-filters 6 --pooling ppv+max --dataset $file_name
-     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 500 --custom-filters 6 --pooling GAP --dataset $file_name
-     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 517 --custom-filters 0 --pooling ppv+max --dataset $file_name
-     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 517 --custom-filters 0 --pooling GAP --dataset $file_name
+     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 500 --custom-filters 0 --pooling GAP --inception-pm $file_name --dataset $file_name
+     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 500 --custom-filters 6 --pooling ppv+max --inception-pm $file_name --dataset $file_name
+     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 500 --custom-filters 6 --pooling GAP --inception-pm $file_name --dataset $file_name
+     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 517 --custom-filters 0 --pooling ppv+max --inception-pm $file_name --dataset $file_name
+     python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 517 --custom-filters 0 --pooling GAP --inception-pm $file_name --dataset $file_name
      python3 get_results.py --dataset $file_name
 done
