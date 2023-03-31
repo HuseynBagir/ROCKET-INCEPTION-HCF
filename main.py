@@ -10,10 +10,12 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import tensorflow as tf
 
+import sys
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/transformations/')
+
 from transformations.transformation import Transformation
 from classifiers.RIDGE import RIDGE
 
-import sys
 sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data, znormalisation, create_directory, encode_labels
 

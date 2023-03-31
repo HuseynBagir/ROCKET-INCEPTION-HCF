@@ -19,43 +19,20 @@ class Inception:
     
     def get_kernels(self):
     
-        weights_40 = self.pretrained_model.layers[3].get_weights()
-        weights_20 = self.pretrained_model.layers[4].get_weights()
-        weights_10 = self.pretrained_model.layers[5].get_weights()
-        weights_1  = self.pretrained_model.layers[6].get_weights()
-        weights_batch = self.pretrained_model.layers[8].get_weights()
+        layer_names = ['input_1', 'reshape', 'max_pooling1d', 'conv1d', 'conv1d_1', 'conv1d_2', 'conv1d_3', 'concatenate', 
+                       'batch_normalization', 'activation','conv1d_4', 'max_pooling1d_1', 'conv1d_5', 'conv1d_6', 'conv1d_7', 
+                       'conv1d_8', 'concatenate_1', 'batch_normalization_1','activation_1', 'conv1d_9', 'max_pooling1d_2', 
+                       'conv1d_10', 'conv1d_11', 'conv1d_12', 'conv1d_13', 'concatenate_2', 'conv1d_14',
+                       'batch_normalization_2', 'batch_normalization_3', 'activation_2', 'add', 'activation_3', 'conv1d_15', 
+                       'max_pooling1d_3', 'conv1d_16','conv1d_17', 'conv1d_18', 'conv1d_19', 'concatenate_3', 
+                       'batch_normalization_4', 'activation_4', 'conv1d_20','max_pooling1d_4', 'conv1d_21', 'conv1d_22', 
+                       'conv1d_23', 'conv1d_24', 'concatenate_4', 'batch_normalization_5', 'activation_5',
+                       'conv1d_25', 'max_pooling1d_5', 'conv1d_26', 'conv1d_27', 'conv1d_28', 'conv1d_29', 'concatenate_5', 
+                       'conv1d_30','batch_normalization_6', 'batch_normalization_7', 'activation_6', 'add_1']
         
-        
-        input_layer = keras.layers.Input(shape=(self.length_TS, 1))
-        
-        max_pool = keras.layers.MaxPool1D(pool_size=3, strides=1, padding='same')(input_layer)
-        
-        conv1 = keras.layers.Conv1D(filters=32, kernel_size=40, strides=1, padding='same', 
-                                    activation=None, use_bias=False)(input_layer)
-        
-        conv2 = keras.layers.Conv1D(filters=32, kernel_size=20, strides=1, padding='same', 
-                                    activation=None, use_bias=False)(input_layer)
-        
-        conv3 = keras.layers.Conv1D(filters=32, kernel_size=10, strides=1, padding='same', 
-                                    activation=None, use_bias=False)(input_layer)
-        
-        conv4 = keras.layers.Conv1D(filters=32, kernel_size=1, strides=1, padding='same',
-                                    activation=None, use_bias=False)(max_pool)
-        
-        concat = keras.layers.Concatenate(axis=2)([conv1, conv2, conv3, conv4])
-        out = keras.layers.BatchNormalization()(concat)
-        
-        #if self.pooling == 'GAP':
-         #   out = keras.layers.GlobalAveragePooling1D()(out)
-        
-        model = tf.keras.models.Model(inputs=input_layer, outputs=out)
-        
-        
-        model.layers[2].set_weights(weights_40)
-        model.layers[3].set_weights(weights_20)
-        model.layers[4].set_weights(weights_10)
-        model.layers[5].set_weights(weights_1)
-        model.layers[7].set_weights(weights_batch)     
+        selected_layers = [self.pretrained_model.get_layer(name) for name in layer_names]
+            
+        model = keras.models.Model(inputs=selected_layers[0].input, outputs=selected_layers[-1].output)
         
         return model
 
@@ -87,7 +64,7 @@ class Inception:
 xtrain, ytrain, xtest, ytest = load_data('Coffee')
 length_TS = int(xtrain.shape[1])
 
-inc = Inception(length_TS, 'Coffee', 'ppv+max+GAP')
+inc = Inception(length_TS, 'Coffee', 'ppv+max')
 
 model = inc.get_kernels()
 
