@@ -27,7 +27,7 @@ def get_args():
         '--dataset',
         help="which dataset to run the experiment on.",
         type=str,
-        default='Coffee'
+        default='MiddlePhalanxTW'
     )
 
     parser.add_argument(
@@ -56,7 +56,7 @@ def get_args():
     parser.add_argument(
         '--inception-pm',
         type=str,
-        default='Coffee'
+        default='MiddlePhalanxTW'
     )
     
     parser.add_argument(

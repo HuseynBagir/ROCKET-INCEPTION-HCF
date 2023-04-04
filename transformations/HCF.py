@@ -158,7 +158,7 @@ class HCF:
         #get the output number of channels needed
         m = len(self.increasing_trend_kernels) + len(self.decreasing_trend_kernels) + len(self.peak_kernels)
 
-        X_transformed = np.zeros(shape=(n, m*2)) # define the transformed input ndarray
+        X_transformed = np.zeros(shape=(n, m*3)) # define the transformed input ndarray
 
         i = 0
 
@@ -168,8 +168,8 @@ class HCF:
 
             X_transformed[:,i] = np.sum(np.heaviside(y, 0),axis=1) / (self.length_TS * 1.0)
             X_transformed[:,i+1] = np.max(y)
+            X_transformed[:,i+2] = np.mean(y, axis=1)
             
-            i += 2
+            i += 3
 
         return X_transformed
-    
