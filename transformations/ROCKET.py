@@ -1,8 +1,8 @@
 import numpy as np
 import sys
 sys.path.insert(1, './home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
-sys.path.insert(1, './home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/transformations/')
-from utils import load_data
+#sys.path.insert(1, './home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/transformations/')
+#from utils import load_data
 import rocket_functions
 
 # @jitclass(spec)
@@ -19,7 +19,7 @@ class ROCKET:
     def transform(self, X, kernels):
         return rocket_functions.apply_kernels(X=X, kernels=kernels)
     
-    
+'''
 xtrain,ytrain,xtest,ytest = load_data('Coffee')
 
 
@@ -30,5 +30,5 @@ roc = ROCKET(leng, 100)
 kernel = roc.get_kernels()
 
 x = roc.transform(np.array(xtrain),kernel)
-
+'''
 

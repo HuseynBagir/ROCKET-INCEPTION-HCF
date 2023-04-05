@@ -54,7 +54,8 @@ def apply_kernel(X, weights, length, bias, dilation, padding):
     input_length = len(X)
 
     output_length = (input_length + (2 * padding)) - ((length - 1) * dilation)
-
+    
+    _mean = 0
     _ppv = 0
     _max = np.NINF
 
@@ -79,8 +80,9 @@ def apply_kernel(X, weights, length, bias, dilation, padding):
 
         if _sum > 0:
             _ppv += 1
+        _mean += _sum
 
-    return _ppv / output_length, _max
+    return _ppv / output_length, _max, _mean / output_length
 
 @njit("float64[:,:](float64[:,:],Tuple((float64[::1],int32[:],float64[:],int32[:],int32[:])))", parallel = True, fastmath = True)
 def apply_kernels(X, kernels):
@@ -90,7 +92,7 @@ def apply_kernels(X, kernels):
     num_examples, _ = X.shape
     num_kernels = len(lengths)
 
-    _X = np.zeros((num_examples, num_kernels * 2), dtype = np.float64) # 2 features per kernel
+    _X = np.zeros((num_examples, num_kernels * 3), dtype = np.float64) # 2 features per kernel
 
     for i in prange(num_examples):
 
@@ -100,7 +102,7 @@ def apply_kernels(X, kernels):
         for j in range(num_kernels):
 
             b1 = a1 + lengths[j]
-            b2 = a2 + 2
+            b2 = a2 + 3
 
             _X[i, a2:b2] = \
             apply_kernel(X[i], weights[a1:b1], lengths[j], biases[j], dilations[j], paddings[j])

@@ -44,12 +44,13 @@ class Transformation:
             transformed_xtest.append(_transformation.transform(X=xtest, kernels=kernels))
         
         return np.concatenate(transformed_xtrain, axis=1), np.concatenate(transformed_xtest, axis=1)
-    
-#xtrain,ytrain,xtest,ytest = load_data('Coffee')
 
-#trans = Transformation('Inception', xtrain.shape[1])
+'''
+xtrain,ytrain,xtest,ytest = load_data('Coffee')
 
-#tr = trans.transform(xtrain, xtest)
+trans = Transformation('Inception', xtrain.shape[1])
 
+tr = trans.transform(xtrain, xtest)
+'''
 
 

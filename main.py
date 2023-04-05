@@ -3,6 +3,12 @@ def warn(*args, **kwargs):
 import warnings
 warnings.warn = warn
 
+
+import sys
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/transformations/')
+
 import argparse
 import pandas as pd
 import numpy as np
@@ -13,8 +19,6 @@ import tensorflow as tf
 from transformations.transformation import Transformation
 from classifiers.RIDGE import RIDGE
 
-import sys
-sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data, znormalisation, create_directory, encode_labels
 
 def get_args():
@@ -25,7 +29,7 @@ def get_args():
         '--dataset',
         help="which dataset to run the experiment on.",
         type=str,
-        default='MiddlePhalanxTW'
+        default='Haptics'
     )
 
     parser.add_argument(
@@ -36,7 +40,7 @@ def get_args():
                  'Inception+HCF', 'HCF+Inception', 'ROCKET+HCF', 'HCF+ROCKET', 
                  'ROCKET+HCF+Inception', 'ROCKET+Inception+HCF', 'HCF+ROCKET+Inception',
                  'HCF+Inception+ROCKET', 'Inception+ROCKET+HCF', 'Inception+HCF+ROCKET'],
-        default='ROCKET'
+        default='HCF'
     )
 
     parser.add_argument(
@@ -54,7 +58,7 @@ def get_args():
     parser.add_argument(
         '--inception-pm',
         type=str,
-        default='MiddlePhalanxTW'
+        default='Haptics'
     )
     
     parser.add_argument(
