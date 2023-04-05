@@ -25,7 +25,7 @@ def get_args():
         '--dataset',
         help="which dataset to run the experiment on.",
         type=str,
-        default='Coffee'
+        default='MiddlePhalanxTW'
     )
 
     parser.add_argument(
@@ -36,7 +36,7 @@ def get_args():
                  'Inception+HCF', 'HCF+Inception', 'ROCKET+HCF', 'HCF+ROCKET', 
                  'ROCKET+HCF+Inception', 'ROCKET+Inception+HCF', 'HCF+ROCKET+Inception',
                  'HCF+Inception+ROCKET', 'Inception+ROCKET+HCF', 'Inception+HCF+ROCKET'],
-        default='ROCKET+HCF+Inception'
+        default='ROCKET'
     )
 
     parser.add_argument(
@@ -54,7 +54,7 @@ def get_args():
     parser.add_argument(
         '--inception-pm',
         type=str,
-        default='Coffee'
+        default='MiddlePhalanxTW'
     )
     
     parser.add_argument(
