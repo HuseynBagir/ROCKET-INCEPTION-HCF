@@ -33,10 +33,10 @@ class Transformation:
         for transformation in self.transformations:
 
             if transformation == 'ROCKET':
-                _transformation = ROCKET(length_TS=self.length_TS, n_filters=self.n_filters_rocket)
+                _transformation = ROCKET(length_TS=self.length_TS, n_filters=self.n_filters_rocket, pooling=self.pooling)
 
             elif transformation == 'HCF':
-                _transformation = HCF(length_TS=self.length_TS, n_filters=self.n_filters_hcf)
+                _transformation = HCF(length_TS=self.length_TS, n_filters=self.n_filters_hcf, pooling=self.pooling)
 
             elif transformation == 'Inception':
                 _transformation = Inception(length_TS=self.length_TS, pretrained_model=self.pretrained_model, pooling=self.pooling)

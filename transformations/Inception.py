@@ -4,6 +4,7 @@ sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/u
 from utils import load_data
 import numpy as np
 import tensorflow as tf
+from itertools import permutations
 
 
 class Inception:
@@ -41,19 +42,44 @@ class Inception:
         
         y_pred = kernels.predict(X)
         
-        if self.pooling == 'ppv+max':
+        if tuple(self.pooling.split('+')) in list(permutations(['ppv'])):
+            pvps = np.mean(y_pred > 0, axis=1)
+            
+            X_array = pvps
+            
+        elif tuple(self.pooling.split('+')) in list(permutations(['max'])):
+            maxs = np.max(y_pred, axis=1)
+            
+            X_array = maxs
+            
+        elif tuple(self.pooling.split('+')) in list(permutations(['GAP'])):
+            GAP = np.mean(y_pred, axis=1) 
+            
+            X_array = GAP
+            
+        elif tuple(self.pooling.split('+')) in list(permutations(['GAP', 'max'])):
+            GAP = np.mean(y_pred, axis=1) 
+            maxs = np.max(y_pred, axis=1)
+            
+            X_array = np.concatenate([GAP,maxs], axis=1)
+
+        elif tuple(self.pooling.split('+')) in list(permutations(['ppv', 'max'])):
             pvps = np.mean(y_pred > 0, axis=1) 
             maxs = np.max(y_pred, axis=1)
             
             X_array = np.concatenate([pvps,maxs], axis=1)
             
-        elif self.pooling == 'GAP':
-            X_array = np.mean(y_pred, axis=1)
+        elif tuple(self.pooling.split('+')) in list(permutations(['ppv', 'GAP'])):
+            pvps = np.mean(y_pred > 0, axis=1) 
+            GAP = np.mean(y_pred, axis=1)
             
-        elif self.pooling == 'ppv+max+GAP':
+            X_array = np.concatenate([pvps,GAP], axis=1)
+            
+        elif tuple(self.pooling.split('+')) in list(permutations(['ppv', 'max', 'GAP'])):
             pvps = np.mean(y_pred > 0, axis=1) 
             maxs = np.max(y_pred, axis=1)
             GAP = np.mean(y_pred, axis=1)
+            
             X_array = np.concatenate([pvps,maxs,GAP], axis=1)
         
         return X_array
@@ -62,7 +88,7 @@ class Inception:
 xtrain, ytrain, xtest, ytest = load_data('Coffee')
 length_TS = int(xtrain.shape[1])
 
-inc = Inception(length_TS, 'Coffee', 'ppv+max+GAP')
+inc = Inception(length_TS, 'Coffee', 'ppv')
 
 model = inc.get_kernels()
 

@@ -108,10 +108,12 @@ if __name__ == '__main__':
             output_dir_transformation = output_dir_transformation + '-' + str(args.custom_filters)
             
         elif transformation_name == 'Inception':
-            output_dir_transformation = output_dir_transformation + '-' + str(args.pooling)
+            output_dir_transformation = output_dir_transformation
         
         if i < len(transformations) - 1:
             output_dir_transformation = output_dir_transformation + '+'
+            
+    output_dir_transformation = output_dir_transformation + '-' + str(args.pooling)
     
     output_dir_transformation = output_dir_transformation + '/'
     create_directory(output_dir_transformation)
