@@ -1,9 +1,7 @@
 import tensorflow as tf
 import numpy as np
-from itertools import permutations
-
 import sys
-sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, './home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data
 
 class HCF:
@@ -159,116 +157,36 @@ class HCF:
 
         n = int(X.shape[0])
         X = np.expand_dims(X, axis=2)
-
-        #get the output number of channels needed
-        m = len(self.increasing_trend_kernels) + len(self.decreasing_trend_kernels) + len(self.peak_kernels)
-
-
-        if tuple(self.pooling.split('+')) in list(permutations(['ppv', 'max', 'GAP'])):
-            X_transformed = np.zeros(shape=(n, m*3)) # define the transformed input ndarray
-    
-            i = 0
-    
-            for kernel in kernels:
-    
-                y = np.asarray(kernel(X)).reshape(n,self.length_TS)
-    
-                X_transformed[:,i] = np.sum(np.heaviside(y, 0),axis=1) / (self.length_TS * 1.0)
-                X_transformed[:,i+1] = np.max(y)
-                X_transformed[:,i+2] = np.mean(y, axis=1)
-                
-                i += 3
+            
+        pools = []
         
-        elif tuple(self.pooling.split('+')) in list(permutations(['ppv', 'max'])):
-            X_transformed = np.zeros(shape=(n, m*2)) # define the transformed input ndarray
-    
-            i = 0
-    
-            for kernel in kernels:
-    
-                y = np.asarray(kernel(X)).reshape(n,self.length_TS)
-    
-                X_transformed[:,i] = np.sum(np.heaviside(y, 0),axis=1) / (self.length_TS * 1.0)
-                X_transformed[:,i+1] = np.max(y)
+        for kernel in kernels:
+            
+            y = np.asarray(kernel(X)).reshape(n,self.length_TS)
+            
+            for pool in self.pooling.split('+'):
                 
-                i +=2
+                if pool == 'ppv':
+                    p = np.sum(np.heaviside(y, 0),axis=1) / (self.length_TS * 1.0)
                 
-        elif tuple(self.pooling.split('+')) in list(permutations(['ppv', 'GAP'])):
-            X_transformed = np.zeros(shape=(n, m*2)) # define the transformed input ndarray
-    
-            i = 0
-    
-            for kernel in kernels:
-    
-                y = np.asarray(kernel(X)).reshape(n,self.length_TS)
-    
-                X_transformed[:,i] = np.sum(np.heaviside(y, 0),axis=1) / (self.length_TS * 1.0)
-                X_transformed[:,i+1] = np.mean(y, axis=1)
-                
-                i += 2
-                        
-        elif tuple(self.pooling.split('+')) in list(permutations(['max', 'GAP'])):
-            X_transformed = np.zeros(shape=(n, m*2)) # define the transformed input ndarray
-    
-            i = 0
-    
-            for kernel in kernels:
-    
-                y = np.asarray(kernel(X)).reshape(n,self.length_TS)
-    
-                X_transformed[:,i] = np.max(y)
-                X_transformed[:,i+1] = np.mean(y, axis=1)
-                
-                i += 2
-                     
-        elif tuple(self.pooling.split('+')) in list(permutations(['ppv'])):
-            X_transformed = np.zeros(shape=(n, m)) # define the transformed input ndarray
-    
-            i = 0
-    
-            for kernel in kernels:
-    
-                y = np.asarray(kernel(X)).reshape(n,self.length_TS)
-    
-                X_transformed[:,i] = np.sum(np.heaviside(y, 0),axis=1) / (self.length_TS * 1.0)
-                i += 1
-             
-                        
-        elif tuple(self.pooling.split('+')) in list(permutations(['max'])):
-            X_transformed = np.zeros(shape=(n, m)) # define the transformed input ndarray
-    
-            i = 0
-    
-            for kernel in kernels:
-    
-                y = np.asarray(kernel(X)).reshape(n,self.length_TS)
-    
-                X_transformed[:,i] = np.max(y)
-                
-                i += 1
-             
-                        
-        elif tuple(self.pooling.split('+')) in list(permutations(['GAP'])):
-            X_transformed = np.zeros(shape=(n, m)) # define the transformed input ndarray
-    
-            i = 0
-    
-            for kernel in kernels:
-    
-                y = np.asarray(kernel(X)).reshape(n,self.length_TS)
-                
-                X_transformed[:,i] = np.mean(y, axis=1)
-                
-                i += 1
-                
-        return X_transformed
-    
+                elif pool == 'max':
+                    p = np.max(y, axis=1)
+            
+                elif pool == 'GAP':
+                    p = np.mean(y, axis=1)
+            
+                pools.append(p)
 
-xtrain, ytrain, xtest, ytest = load_data('Coffee')
-length_TS = int(xtrain.shape[1])
+        return np.vstack(pools).T
+    
+'''
+xtrain,ytrain,xtest,ytest = load_data('Coffee')
 
-inc = HCF(length_TS, n_filters=6, pooling='max+GAP+ppv')
+leng = xtrain.shape[1]
 
-model = inc.get_kernels()
+roc = HCF(leng, n_filters=6, pooling='ppv+max+GAP')
 
-X = inc.transform(xtrain, model)
+kernel = roc.get_kernels()
+
+x = roc.transform(np.array(xtrain),kernel)
+'''

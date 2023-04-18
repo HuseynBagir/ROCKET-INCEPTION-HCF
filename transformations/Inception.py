@@ -37,58 +37,36 @@ class Inception:
         
         return model
 
-    
+
     def transform(self, X, kernels):
         
         y_pred = kernels.predict(X)
         
-        if tuple(self.pooling.split('+')) in list(permutations(['ppv'])):
-            pvps = np.mean(y_pred > 0, axis=1)
+        pools = []
+        
+        for pool in self.pooling.split('+'):
             
-            X_array = pvps
+            if pool == 'max':
+                p = np.max(y_pred, axis=1)
+                
+            elif pool == 'ppv':
+                p = np.mean(y_pred > 0, axis=1) 
+        
+            elif pool == 'GAP':
+                p = np.mean(y_pred, axis=1)
+        
+            pools.append(p)
             
-        elif tuple(self.pooling.split('+')) in list(permutations(['max'])):
-            maxs = np.max(y_pred, axis=1)
-            
-            X_array = maxs
-            
-        elif tuple(self.pooling.split('+')) in list(permutations(['GAP'])):
-            GAP = np.mean(y_pred, axis=1) 
-            
-            X_array = GAP
-            
-        elif tuple(self.pooling.split('+')) in list(permutations(['GAP', 'max'])):
-            GAP = np.mean(y_pred, axis=1) 
-            maxs = np.max(y_pred, axis=1)
-            
-            X_array = np.concatenate([GAP,maxs], axis=1)
-
-        elif tuple(self.pooling.split('+')) in list(permutations(['ppv', 'max'])):
-            pvps = np.mean(y_pred > 0, axis=1) 
-            maxs = np.max(y_pred, axis=1)
-            
-            X_array = np.concatenate([pvps,maxs], axis=1)
-            
-        elif tuple(self.pooling.split('+')) in list(permutations(['ppv', 'GAP'])):
-            pvps = np.mean(y_pred > 0, axis=1) 
-            GAP = np.mean(y_pred, axis=1)
-            
-            X_array = np.concatenate([pvps,GAP], axis=1)
-            
-        elif tuple(self.pooling.split('+')) in list(permutations(['ppv', 'max', 'GAP'])):
-            pvps = np.mean(y_pred > 0, axis=1) 
-            maxs = np.max(y_pred, axis=1)
-            GAP = np.mean(y_pred, axis=1)
-            
-            X_array = np.concatenate([pvps,maxs,GAP], axis=1)
+        X_array = np.concatenate(pools, axis=1)
         
         return X_array
+            
 
 '''
 xtrain, ytrain, xtest, ytest = load_data('Coffee')
 length_TS = int(xtrain.shape[1])
 
-inc = Inception(length_TS, 'Coffee', 'ppv')
+inc = Inception(length_TS, 'Coffee', 'ppv+max+GAP')
 
 model = inc.get_kernels()
 

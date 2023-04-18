@@ -5,8 +5,8 @@ file_names=('ACSF1' 'Adiac' 'AllGestureWiimoteX' 'AllGestureWiimoteY' 'AllGestur
 for file_name in "${file_names[@]}"; do
     # source ~/anaconda3/etc/profile.d/conda.sh
     # conda activate tfgpu
-    # python3 -u main.py --transformation ROCKET+HCF --rocket-filters 500 --custom-filters 0 --dataset $file_name
-    # python3 -u main.py --transformation ROCKET+HCF --rocket-filters 500 --custom-filters 6 --dataset $file_name
-    # python3 -u main.py --transformation ROCKET+HCF --rocket-filters 517 --custom-filters 0 --dataset $file_name
+    
+    python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 500 --custom-filters 6 --inception-pm $file_name --dataset $file_name
+    
     python3 get_results.py --dataset $file_name
 done
