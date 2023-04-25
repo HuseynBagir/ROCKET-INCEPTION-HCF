@@ -1,8 +1,4 @@
 import numpy as np
-import sys
-sys.path.insert(0, './home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
-sys.path.insert(1, './home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/transformations/')
-from utils import load_data
 import rocket_functions
 
 class ROCKET:
@@ -35,17 +31,3 @@ class ROCKET:
             pools.append(p)
             
         return np.concatenate(pools, axis=1)
-        
-        #return rocket_functions.apply_kernels(X=X, kernels=kernels)
-            
-'''
-xtrain,ytrain,xtest,ytest = load_data('Coffee')
-
-leng = xtrain.shape[1]
-
-roc = ROCKET(leng, n_filters=100, pooling='GAP+max')
-
-kernel = roc.get_kernels()
-
-x = roc.transform(np.array(xtrain),kernel)
-'''

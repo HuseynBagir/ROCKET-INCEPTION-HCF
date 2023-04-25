@@ -12,8 +12,6 @@
 
 import numpy as np
 from numba import njit, prange
-from itertools import permutations
-from numba.core.types import string
 
 @njit("Tuple((float64[:],int32[:],float64[:],int32[:],int32[:]))(int64,int64)")
 def generate_kernels(input_length, num_kernels):
@@ -76,13 +74,13 @@ def apply_kernel(X, weights, length, bias, dilation, padding):
                 _sum = _sum + weights[j] * X[index]
 
             index = index + dilation
+            
         if _sum > _max:
             _max = _sum
 
         if _sum > 0:
             _ppv += 1
-            
-        _mean += _sum
+            _mean += _sum
         
     return _ppv / output_length, _max, _mean / output_length
 
@@ -95,7 +93,7 @@ def apply_kernels(X, kernels):
     num_examples, _ = X.shape
     num_kernels = len(lengths)
 
-    _X = np.zeros((num_examples, num_kernels * 3), dtype = np.float64) # 2 features per kernel
+    _X = np.zeros((num_examples, num_kernels * 3), dtype = np.float64) # 3 features per kernel
 
     for i in prange(num_examples):
 
@@ -114,46 +112,3 @@ def apply_kernels(X, kernels):
             a2 = b2
 
     return _X
-
-
-'''@njit("float64[:,:](float64[:,:],Tuple((float64[::1],int32[:],float64[:],int32[:],int32[:])), string)", parallel = True, fastmath = True)
-def apply_kernels(X, kernels, pooling):
-
-    weights, lengths, biases, dilations, paddings = kernels
-
-    num_examples, _ = X.shape
-    num_kernels = len(lengths)
-
-    _X = np.zeros((num_examples, num_kernels * len(pooling.split('+'))), dtype = np.float64) 
-
-    for i in prange(num_examples):
-
-        a1 = 0 # for weights
-        a2 = 0 # for features
-
-        for j in range(num_kernels):
-
-            b1 = a1 + lengths[j]
-            b2 = a2 + len(pooling.split('+'))
-
-            _X[i, a2:b2] = \
-            apply_kernel(X[i], weights[a1:b1], lengths[j], biases[j], dilations[j], paddings[j])
-
-            a1 = b1
-            a2 = b2
-
-    pools = []
-
-    for pool in pooling.split('+'):
-        if pool == 'ppv':
-            p = _X[:,::3]
-            
-        elif pool == 'max':
-            p = _X[:,1::3]
-            
-        elif pool == 'GAP':
-            p = _X[:,2::3]
-            
-        pools.append(p)
-    
-    return np.concatenate(pools, aixs=1)'''

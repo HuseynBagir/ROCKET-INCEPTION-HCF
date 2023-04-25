@@ -1,8 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import sys
-sys.path.insert(1, './home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
-from utils import load_data
 
 class HCF:
 
@@ -167,7 +164,7 @@ class HCF:
             for pool in self.pooling.split('+'):
                 
                 if pool == 'ppv':
-                    p = np.sum(np.heaviside(y, 0),axis=1) / (self.length_TS * 1.0)
+                    p = np.mean(y>0, axis=1)
                 
                 elif pool == 'max':
                     p = np.max(y, axis=1)
@@ -178,15 +175,3 @@ class HCF:
                 pools.append(p)
 
         return np.vstack(pools).T
-    
-'''
-xtrain,ytrain,xtest,ytest = load_data('Coffee')
-
-leng = xtrain.shape[1]
-
-roc = HCF(leng, n_filters=6, pooling='ppv+max+GAP')
-
-kernel = roc.get_kernels()
-
-x = roc.transform(np.array(xtrain),kernel)
-'''

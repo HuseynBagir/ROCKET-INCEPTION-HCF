@@ -12,7 +12,7 @@ def get_args():
         '--dataset',
         help="which dataset to run the experiment on.",
         type=str,
-        default='Beef'
+        default='Coffee'
     )
 
     parser.add_argument(
