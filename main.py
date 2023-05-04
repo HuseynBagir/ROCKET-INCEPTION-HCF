@@ -62,7 +62,7 @@ def get_args():
     parser.add_argument(
         '--pooling',
         type=str,
-        default='ppv+max+GAP'
+        default='ppv+max+GAP+mpv+mipv+lspv'
     )
    
     parser.add_argument(

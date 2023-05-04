@@ -3,6 +3,7 @@ import numpy as np
 import sys
 sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data
+import time
 
 class Inception:
     
@@ -53,9 +54,50 @@ class Inception:
         
             elif pool == 'GAP':
                 p = np.mean(y_pred, axis=1)
+                
+            elif pool == 'mpv':
+                p = np.nanmean(np.where(y_pred > 0, y_pred, np.nan), axis=1)
+                
+            elif pool == 'mipv':
+                
+                positive_indices = np.where(y_pred > 0)
+                axis1_indices = positive_indices[1]
+
+                p = np.zeros((y_pred.shape[0], y_pred.shape[2]))
+                for i in range(y_pred.shape[0]):
+                    for j in range(y_pred.shape[2]):
+                        indices = axis1_indices[(positive_indices[0] == i) & (positive_indices[2] == j)]
+                        if indices.size > 0:
+                            p[i, j] = np.mean(indices)
+                
+            elif pool == 'lspv':
+                p = np.zeros((y_pred.shape[0], y_pred.shape[2]))
+                for i in range(y_pred.shape[0]):
+                    for j in range(y_pred.shape[2]):
+                        
+                        max_count = 0
+                        count = 0
+                        for c in range(y_pred.shape[1]):
+                            if y_pred[i,c,j] > 0:
+                                count += 1
+                                if count > max_count:
+                                    max_count = count
+                            else:
+                                count = 0
+
+                        p[i,j] = max_count
         
             pools.append(p)
             
         X_array = np.concatenate(pools, axis=1)
         
         return X_array
+    
+xtrain, ytrain, xtest, ytest = load_data('Coffee')
+length_TS = int(xtrain.shape[1])
+inc = Inception(length_TS, 'Coffee', 'mipv')
+model = inc.get_kernels()
+start = time.time()
+X = inc.transform(xtrain, model)
+print(time.time()-start)
+    

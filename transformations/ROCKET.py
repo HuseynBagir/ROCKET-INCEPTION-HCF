@@ -1,5 +1,9 @@
 import numpy as np
 import rocket_functions
+import sys
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+from utils import load_data
+import time
 
 class ROCKET:
 
@@ -20,14 +24,33 @@ class ROCKET:
         
         for pool in self.pooling.split('+'):
             if pool == 'ppv':
-                p = X_arr[:,::3]
+                p = X_arr[:,::6]
                 
             elif pool == 'max':
-                p = X_arr[:,1::3]
+                p = X_arr[:,1::6]
                 
             elif pool == 'GAP':
-                p = X_arr[:,2::3]
+                p = X_arr[:,2::6]
+                
+            elif pool == 'mpv':
+                p = X_arr[:,3::6]
+                
+            elif pool == 'mipv':
+                p = X_arr[:,4::6]
+                
+            elif pool == 'lspv':
+                p = X_arr[:,5::6]
                 
             pools.append(p)
             
         return np.concatenate(pools, axis=1)
+
+xtrain, ytrain, xtest, ytest = load_data('Coffee')
+length_TS = int(xtrain.shape[1])
+hcf = ROCKET(length_TS, 500, 'mipv')
+model = hcf.get_kernels()
+
+start = time.time()
+X = hcf.transform(xtrain, model)
+print(time.time() - start)
+

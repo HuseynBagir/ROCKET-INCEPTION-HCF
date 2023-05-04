@@ -1,5 +1,9 @@
 import tensorflow as tf
 import numpy as np
+import sys
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+from utils import load_data
+import time
 
 class HCF:
 
@@ -171,7 +175,48 @@ class HCF:
             
                 elif pool == 'GAP':
                     p = np.mean(y, axis=1)
+                    
+                elif pool == 'mpv':
+                    p = np.nanmean(np.where(y > 0, y, np.nan), axis=1)
+                
+                elif pool == 'mipv':
+                        
+                    positive_indices = np.where(y > 0)
+                    axis1_indices = positive_indices[1]
+
+                    p = np.zeros((y.shape[0]))
+                    for i in range(y.shape[0]):
+                            indices = axis1_indices[(positive_indices[0] == i)]
+                            if indices.size > 0:
+                                p[i] = np.mean(indices)
+                        
+                elif pool == 'lspv':
+                        
+                    p = np.zeros((y.shape[0]))
+                    for i in range(y.shape[0]):
+                                
+                        max_count = 0
+                        count = 0
+                        for c in range(y.shape[1]):
+                            if y[i,c] > 0:
+                                count += 1
+                                if count > max_count:
+                                    max_count = count
+                                else:
+                                    count = 0
+
+                            p[i] = max_count
             
                 pools.append(p)
 
         return np.vstack(pools).T
+    
+
+xtrain, ytrain, xtest, ytest = load_data('Coffee')
+length_TS = int(xtrain.shape[1])
+hcf = HCF(length_TS, 6, 'mipv')
+model = hcf.get_kernels()
+
+start = time.time()
+X = hcf.transform(xtrain, model)
+print(time.time() - start)
