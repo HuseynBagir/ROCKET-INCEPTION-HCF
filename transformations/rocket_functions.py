@@ -104,7 +104,7 @@ def apply_kernel(X, weights, length, bias, dilation, padding):
         _mean_pos = 0
         _mean_pos_index = 0
             
-    return _ppv / output_length, _max, _mean / output_length, _mean_pos, _mean_pos_index, _max_stretch
+    return _ppv / output_length, _max, _mean / output_length, _mean_pos, _mean_pos_index, _max_stretch * 1.0
 
 
 

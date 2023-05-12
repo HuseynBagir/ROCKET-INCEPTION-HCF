@@ -3,6 +3,7 @@ def warn(*args, **kwargs):
 import warnings
 warnings.warn = warn
 
+import time
 import argparse
 import pandas as pd
 import numpy as np
@@ -11,12 +12,12 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 
 import sys
-sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/transformations/')
+sys.path.insert(1, '/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/transformations/')
 
 from transformations.transformation import Transformation
 from classifiers.RIDGE import RIDGE
 
-sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, '/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data, znormalisation, create_directory, encode_labels
 
 def get_args():
@@ -27,7 +28,7 @@ def get_args():
         '--dataset',
         help="which dataset to run the experiment on.",
         type=str,
-        default='Coffee'
+        default='Adiac'
     )
 
     parser.add_argument(
@@ -38,13 +39,13 @@ def get_args():
                  'Inception+HCF', 'HCF+Inception', 'ROCKET+HCF', 'HCF+ROCKET', 
                  'ROCKET+HCF+Inception', 'ROCKET+Inception+HCF', 'HCF+ROCKET+Inception',
                  'HCF+Inception+ROCKET', 'Inception+ROCKET+HCF', 'Inception+HCF+ROCKET'],
-        default='ROCKET+HCF+Inception'
+        default='Inception'
     )
 
     parser.add_argument(
         '--rocket-filters',
         type=int,
-        default=500
+        default=10000
     )
 
     parser.add_argument(
@@ -56,13 +57,13 @@ def get_args():
     parser.add_argument(
         '--inception-pm',
         type=str,
-        default='Coffee'
+        default='Adiac'
     )
     
     parser.add_argument(
         '--pooling',
         type=str,
-        default='ppv+max+GAP+mpv+mipv+lspv'
+        default='ppv+mpv+mipv+lspv'
     )
    
     parser.add_argument(
@@ -128,7 +129,7 @@ if __name__ == '__main__':
 
     length_TS = int(xtrain.shape[1])
     n_classes = len(np.unique(ytrain))
-
+    start = time.time()
     for _run in range(args.runs):
 
         print('dataset ',args.dataset)
@@ -155,3 +156,4 @@ if __name__ == '__main__':
         df = df.append({'accuracy' : acc}, ignore_index=True)
 
         df.to_csv(output_dir + 'metric.csv', index=False)
+print(time.time() - start)

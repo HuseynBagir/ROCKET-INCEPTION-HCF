@@ -1,7 +1,7 @@
 import keras
 import numpy as np
 import sys
-sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, '/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data
 import time
 
@@ -11,7 +11,7 @@ class Inception:
         
         self.length_TS = length_TS
         
-        self.pretrained_model = keras.models.load_model('/home/huseyn/internship/code/inception_pretrained/' + 
+        self.pretrained_model = keras.models.load_model('/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/inception_pretrained/' + 
                                                        pretrained_model + '/best_model.hdf5')
         
         self.pooling = pooling
@@ -39,9 +39,7 @@ class Inception:
 
 
     def transform(self, X, kernels):
-        
         y_pred = kernels.predict(X)
-        
         pools = []
         
         for pool in self.pooling.split('+'):
@@ -57,18 +55,17 @@ class Inception:
                 
             elif pool == 'mpv':
                 p = np.nanmean(np.where(y_pred > 0, y_pred, np.nan), axis=1)
+                p[np.isnan(p)] = 0
                 
             elif pool == 'mipv':
                 
-                positive_indices = np.where(y_pred > 0)
-                axis1_indices = positive_indices[1]
-
-                p = np.zeros((y_pred.shape[0], y_pred.shape[2]))
+                p = np.zeros((y_pred.shape[0],y_pred.shape[2]))
                 for i in range(y_pred.shape[0]):
                     for j in range(y_pred.shape[2]):
-                        indices = axis1_indices[(positive_indices[0] == i) & (positive_indices[2] == j)]
-                        if indices.size > 0:
-                            p[i, j] = np.mean(indices)
+                        if len(np.where(y_pred[i,:,j]>0)[0])>0:
+                            p[i,j] = (np.sum(np.where(y_pred[i,:,j]>0)) / len(np.where(y_pred[i,:,j]>0)[0]))
+                        else:
+                            p[i,j] = 0
                 
             elif pool == 'lspv':
                 p = np.zeros((y_pred.shape[0], y_pred.shape[2]))
@@ -92,12 +89,12 @@ class Inception:
         X_array = np.concatenate(pools, axis=1)
         
         return X_array
-    
-xtrain, ytrain, xtest, ytest = load_data('Coffee')
+        
+        
+'''xtrain, ytrain, xtest, ytest = load_data('FordA')
 length_TS = int(xtrain.shape[1])
-inc = Inception(length_TS, 'Coffee', 'mipv')
+inc = Inception(length_TS, 'FordA', 'ppv+max+GAP+mpv+mipv+lspv')
 model = inc.get_kernels()
 start = time.time()
 X = inc.transform(xtrain, model)
-print(time.time()-start)
-    
+#print(time.time()-start)'''

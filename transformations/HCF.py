@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import sys
-sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, '/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data
 import time
 
@@ -178,17 +178,16 @@ class HCF:
                     
                 elif pool == 'mpv':
                     p = np.nanmean(np.where(y > 0, y, np.nan), axis=1)
+                    p[np.isnan(p)] = 0
                 
                 elif pool == 'mipv':
-                        
-                    positive_indices = np.where(y > 0)
-                    axis1_indices = positive_indices[1]
-
+                                
                     p = np.zeros((y.shape[0]))
                     for i in range(y.shape[0]):
-                            indices = axis1_indices[(positive_indices[0] == i)]
-                            if indices.size > 0:
-                                p[i] = np.mean(indices)
+                        if len(np.where(y[i,:]>0)[0]>0):
+                            p[i] = np.sum(np.where(y[i,:]>0)) / len(np.where(y[i,:]>0)[0])
+                        else:
+                            p[i] = 0
                         
                 elif pool == 'lspv':
                         
@@ -210,13 +209,12 @@ class HCF:
                 pools.append(p)
 
         return np.vstack(pools).T
-    
-
-xtrain, ytrain, xtest, ytest = load_data('Coffee')
+        
+'''xtrain, ytrain, xtest, ytest = load_data('Adiac')
 length_TS = int(xtrain.shape[1])
-hcf = HCF(length_TS, 6, 'mipv')
+hcf = HCF(length_TS, 6, 'ppv+max+GAP+mpv+mipv+lspv')
 model = hcf.get_kernels()
 
 start = time.time()
 X = hcf.transform(xtrain, model)
-print(time.time() - start)
+print(time.time() - start)'''
