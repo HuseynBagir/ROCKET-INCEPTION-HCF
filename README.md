@@ -7,4 +7,4 @@
 <img src="plots/ppv+mpv+mipv+lspv vs ppv+max+GAP.png">
 <img src="plots/ppv+mpv+mipv+lspv vs ppv.png">
 <img src="plots/ppv+mpv+mipv+lspv vs ppv+mpv+lspv+GAP.png">
-<img src="plots/ppv+mpv+mipv+lspv vs ppv+mpv+mipv+lspv+GAP+max.png">
+<img src="plots/ppv+mpv+mipv+lspv vs ppv+mpv+mipv+lspv+GAP+max .png">
