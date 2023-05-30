@@ -10,3 +10,4 @@
 <img src="plots/rock-ppv+lspv+mpv+mipv vs rock-ppv+lspv+mpv+mipv+GAP+max.png">
 <img src="plots/rock-ppv+lspv+mpv+mipv+GAP+max vs multi-ppv+lspv+mpv+mipv.png">
 <img src="plots/rocket vs multi-ppv+lspv+mpv+mipv.png">
+<img src="plots/rock-ppv+lspv+mpv+mipv vs rock-ppv.png.png">
