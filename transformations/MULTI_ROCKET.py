@@ -1,7 +1,9 @@
 import numpy as np
 import multirocket
 import sys
-sys.path.insert(1, '/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/classifiers/')
+from SOFTMAX import Softmax
 from utils import load_data
 import time
 
@@ -55,7 +57,7 @@ class MultiRocket:
         
         return np.concatenate(pools, axis=1)
 
-'''
+
 xtrain, ytrain, xtest, ytest = load_data('Haptics')
 
 start = time.time()
@@ -64,4 +66,23 @@ kernels = mr.get_kernels()
 
 X = mr.transform(xtrain, kernels)
 
-print(time.time() - start)'''
+output_layer = keras.layers.Dense(nb_classes, activation='softmax')(X)
+
+model = keras.models.Model(inputs=input_layer, outputs=output_layer)
+
+model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(),
+                      metrics=['accuracy'])
+
+reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.5, patience=50,
+                                                      min_lr=0.0001)
+
+file_path = self.output_directory + 'best_model.hdf5'
+
+model_checkpoint = keras.callbacks.ModelCheckpoint(filepath=file_path, monitor='loss',
+                                                           save_best_only=True)
+
+self.callbacks = [reduce_lr, model_checkpoint]
+
+return model
+
+print(time.time() - start)

@@ -21,6 +21,3 @@ class RIDGE:
         ypred = self.clf.predict(X)
         
         return accuracy_score(y_true=Y, y_pred=ypred)#, normalize=True)
-    
-    
-    

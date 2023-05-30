@@ -1,4 +1,4 @@
-file_names=('ACSF1' 'Adiac' 'ArrowHead' 'Beef' 'BirdChicken' 'CinCECGTorso' 'Coffee' 'FordA' 'Haptics'  'HouseTwenty' 'MedicalImages' 'MiddlePhalanxTW')
+file_names=('ACSF1' 'Adiac' 'ArrowHead' 'BME' 'Beef' 'BeetleFly' 'BirdChicken' 'Car' 'Chinatown' 'Coffee' 'Computers' 'Crop' 'DiatomSizeReduction' 'DistalPhalanxOutlineAgeGroup' 'DistalPhalanxOutlineCorrect' 'DistalPhalanxTW' 'DodgerLoopDay' 'DodgerLoopGame' 'DodgerLoopWeekend' 'ECG200' 'ECGFiveDays' 'Earthquakes' 'FaceFour' 'FiftyWords' 'Fish' 'FordA' 'GunPoint' 'Ham' 'Haptics' 'Herring' 'HouseTwenty' 'InlineSkate' 'LargeKitchenAppliances' 'Lightning2' 'Lightning7' 'Meat' 'MedicalImages' 'MiddlePhalanxTW' 'OSULeaf' 'OliveOil')
 
 for file_name in "${file_names[@]}"; do
     # source ~/anaconda3/etc/profile.d/conda.sh
@@ -6,32 +6,15 @@ for file_name in "${file_names[@]}"; do
 
     python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling ppv+lspv+mpv+mipv --dataset $file_name
 
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling ppv+lspv+mpv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling ppv+lspv+mipv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling ppv+mpv+mipv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling lspv+mpv+mipv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling ppv+lspv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling ppv+mpv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling ppv+mipv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling lspv+mpv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling lspv+mipv --dataset $file_name
-
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling mpv+mipv --dataset $file_name
-
     python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling ppv --dataset $file_name
 
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling lspv --dataset $file_name
+    python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 10000 --custom-filters 6 --inception-pm $file_name --pooling ppv+lspv+mpv+mipv+GAP+max --dataset $file_name
 
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling mpv --dataset $file_name
+    python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 10000 --custom-filters 6 --inception-pm $file_name --pooling ppv+lspv+mpv+mipv --dataset $file_name
 
-    python3 -u main.py --transformation MultiROCKET+HCF+Inception --multirocket-filters 40000 --custom-filters 6 --inception-pm $file_name --pooling mipv --dataset $file_name
+
+    python3 -u main.py --transformation ROCKET+HCF+Inception --rocket-filters 10000 --custom-filters 6 --inception-pm $file_name --pooling ppv --dataset $file_name
+
+    python3 get_results.py --dataset $file_name
 
 done

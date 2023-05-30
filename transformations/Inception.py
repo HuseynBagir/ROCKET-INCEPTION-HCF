@@ -1,7 +1,7 @@
 import keras
 import numpy as np
 import sys
-sys.path.insert(1, '/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
 from utils import load_data
 import time
 
@@ -33,7 +33,7 @@ class Inception:
         
         self.length_TS = length_TS
         
-        self.pretrained_model = keras.models.load_model('/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/inception_pretrained/' + 
+        self.pretrained_model = keras.models.load_model('/home/huseyn/internship/all_pretrained_models/UCRArchive_2018/' + 
                                                        pretrained_model + '/best_model.hdf5')
         
         self.pooling = pooling
@@ -99,10 +99,10 @@ class Inception:
         return X_array
         
         
-'''xtrain, ytrain, xtest, ytest = load_data('FordA')
+xtrain, ytrain, xtest, ytest = load_data('Coffee')
 length_TS = int(xtrain.shape[1])
-inc = Inception(length_TS, 'FordA', 'ppv+max+GAP+mpv+mipv+lspv')
+inc = Inception(length_TS, 'Coffee', 'ppv+max+GAP+mpv+mipv+lspv')
 model = inc.get_kernels()
 start = time.time()
 X = inc.transform(xtrain, model)
-#print(time.time()-start)'''
+print(time.time()-start)

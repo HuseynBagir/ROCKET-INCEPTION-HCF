@@ -1,7 +1,9 @@
 import tensorflow as tf
 import numpy as np
 import sys
-sys.path.insert(1, '/home/hbagirov/inetrnship/projects/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/utils/')
+sys.path.insert(1, '/home/huseyn/Desktop/roc-inc-hcf/ROCKET-Inception-HCF-main/classifiers/')
+from SOFTMAX import Softmax
 from utils import load_data
 import time
 
@@ -218,12 +220,16 @@ class HCF:
 
         return np.vstack(pools).T
         
-'''xtrain, ytrain, xtest, ytest = load_data('FordA')
+xtrain, ytrain, xtest, ytest = load_data('Coffee')
 length_TS = int(xtrain.shape[1])
 hcf = HCF(length_TS, 6, 'mipv+lspv+mipv+ppv')
 model = hcf.get_kernels()
 
 start = time.time()
 X = hcf.transform(xtrain, model)
-print(time.time() - start)'''
+
+res = Softmax(X)
+print(time.time() - start)
+
+
 
